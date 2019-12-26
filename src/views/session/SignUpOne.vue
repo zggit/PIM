@@ -48,11 +48,13 @@
 									<i class="ti-facebook"></i>
 								</span>
 							</li>
+							<!--
 							<li @click="signInWithGoogle">
 								<span class="google-bg session-icon">
 									<i class="ti-google"></i>
 								</span>
 							</li>
+							-->
 							<li @click="signInWithTwitter">
 								<span class="twitter-bg session-icon">
 									<i class="ti-twitter-alt"></i>
