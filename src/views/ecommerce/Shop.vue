@@ -41,25 +41,31 @@
 				<v-select :items="recent" label="Recent" class="mr-md-5"></v-select>
 				<v-select :items="noOfItems" label="No of Items"></v-select>
 			</div>
+            <div class="d-md-inline-flex mb-4 save-btn">
+                <v-btn color="primary" class="my-0 ml-0 mr-2" @click="saveProductList" medium>Save List</v-btn>
+            </div>
          <!-- grid view			 -->
           <div v-show="selectedView == 'grid'">
-               <products :productsData="productsData"></products>
+               <products  :productsData="productsData"  @productListChange="productListChange" ></products>
 			</div> 
 		</v-container>
 	</div>
 </template>
 <script>
+    import Vue from 'vue'
 	import Products from 'Components/Widgets/Products'
     import Productslist from 'Components/Widgets/ProductsList'
-	import { productsData } from 'Views/ecommerce/data.js'
+    //	import { productsData } from 'Views/ecommerce/data.js'
+    import axios from 'axios';
+
 	export default {
 		components: {
-     		Products,
+     	  Products,
           Productslist  
 	   },
 	  data() {
 	    return {
-	      productsData,
+         productsData:[],
          type: ['Men', 'Women', 'Gadgets', 'Accessories'],
          recent:['This Week', 'This Month', 'Past Month'],
          noOfItems: ['10', '20', '30'],
@@ -68,17 +74,68 @@
          isActive: 'grid'
 	    };
 	  },
-     methods:{
-      listView(){
-         this.viewType = "projectList";
-         this.selectedView = "list";
-         this.isActive = 'list';
-      },
-      girdView(){
-         this.viewType = "projectGrid";
-         this.selectedView = "grid";
-         this.isActive = "grid";         
-      }
+      mounted() {
+	    this.getProductList();
+	  },
+      methods:{
+        getProductList() {
+            const vm = this;
+            axios.post( 'https://beta3.payneglasses.com:450/webyiiapi/tag/list-tag-product.html',
+            {
+                "token": "1234",
+                "page": "0",
+                "pagecount": "10",
+                "condition": {
+                  "tag":"5.95"
+                },
+            }).then(function (response) {
+                for (var i = 0; i < response.data.products.length; i++) {
+                  response.data.products[i].selectedColor=response.data.products[i].skus[0].color_value;
+                  response.data.products[i].color=response.data.products[i].skus[0].color_value;
+                  vm.productsData.push(response.data.products[i]);
+                }
+            })
+             .catch(function (error){
+                alert(error);
+
+            });
+        },
+        saveProductList() {
+          const vm = this;
+          axios.post( 'https://beta3.payneglasses.com:450/webyiiapi/tag/post-tag-list.html',
+            {
+              "token": "1234",
+              "products":vm.productsData
+            }).then(function (response) {
+
+            Vue.notify({
+              group: 'loggedIn',
+              type: 'success',
+              text: 'Product list save successfully!'
+            });
+
+          })
+           .catch(function (error){
+              alert(error);
+            });
+        },
+        productListChange: function (products) {
+          this.productsData = products;
+        },
+
+        listView(){
+          this.viewType = "projectList";
+          this.selectedView = "list";
+          this.isActive = 'list';
+        },
+        girdView(){
+          this.viewType = "projectGrid";
+          this.selectedView = "grid";
+          this.isActive = "grid";
+        },
      }
 	}
 </script>
+<style scoped>
+.save-btn{text-align: right;float: right;}
+</style>

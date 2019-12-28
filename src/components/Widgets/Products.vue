@@ -10,12 +10,12 @@
 						<v-layout row wrap contact-item-info>
 							<v-flex xs12 lg12 md12 sm-12 text-center>
 								<div class="tab-image">
-									<img :src="details.image_url" :key="details.image_url" style="width: 100%;"/>
+									<img :src="details.image" :key="details.image" style="width: 100%;"/>
 									<div>
 										<ul class="custome_product_list d-flex align-items-center pl-0">
-											<li  v-for="(item,i) in details.skus" @click="selectProductBySku(details,item.sku_id)" :class="details.selectedColor == item.color ? 'active' : ''"
+											<li  v-for="(item,i) in details.skus" @click="selectProductBySku(details,item.sku_id)" :class="details.selectedColor == item.color_value ? 'active' : ''"
 											>
-												<p :style="{background:item.color}"></p>
+												<p :style="{background:item.color_value}"></p>
 											</li>
 										</ul>
 										<v-menu bottom offset-y>
@@ -28,7 +28,7 @@
 												<draggable v-model="details.skus"  class="dragArea w-100" group="color" @end="onColorOrderChange()" >
 													<v-list-item v-for="(item) in details.skus">
 														<v-list-item-title>
-															<v-chip class="ma-2" text-color="green" :color="item.color">{{item.color}}</v-chip>
+															<v-chip class="ma-2" text-color="green" :color="item.color_value">{{item.color_value}}</v-chip>
 														</v-list-item-title>
 													</v-list-item>
 												</draggable>
@@ -53,9 +53,9 @@
 								</div>
 							</v-flex>
 							<v-flex xs12 lg12 md12 sm-12 pt-0>
-								<h4 class="mb-3">{{ details.product_name }}</h4>
+								<h4 class="mb-3">{{ details.name }}</h4>
 								<span class="fs-14 d-inline-flex">
-										<span class="primary--text text-center">${{ details.skus[0].price }}</span>
+										<span class="primary--text text-center">${{ details.price }}</span>
 									</span>
 							</v-flex>
 						</v-layout>
@@ -79,7 +79,7 @@
     props:['productsData'],
     data(){
       return{
-        products: this.productsData.products,
+        products: this.productsData,
         currentPage: '',
         selectItemToDelete:'',
         open:false,
@@ -106,22 +106,21 @@
     },
     methods:{
       onEnd(){
+        // Main product sequence change
         this.products.forEach(function(item, index){
-          item.seq = index + 1;
+          item.tag_position = index + 1;
         });
 
-        // Main product sequence change
-
-        //console.log(this.products);
+        this.$emit('productListChange',this.products);
       },
       onColorOrderChange(){
+        // Color order sequence change update full product list.
         this.products.forEach(function(item, index){
           item.skus.forEach(function(skuItem, colorIndex){
-            skuItem.seq=colorIndex + 1;
+            skuItem.tag_position=colorIndex + 1;
           });
         });
-        // Color order sequence change update full product list.
-        // this.products
+        this.$emit('productListChange',this.products);
       },
       deleteDialog(item){
         this.$refs.deleteConfirmationDialog.openDialog();
@@ -147,13 +146,11 @@
           if(item.product_id==selectedProduct.product_id){
             item.skus.forEach(function(skuItem, skuIndex){
               if(skuItem.sku_id==skuId){
-                vm.products[index].image_url=skuItem.image_url;
+                vm.products[index].image=skuItem.image;
               }
             });
           }
         });
-
-
         var elements = document.querySelectorAll(".custome_product_list li");
         for (var i = 0; i < elements.length; i++) {
           elements[i].addEventListener("click", function(e) {
@@ -163,13 +160,12 @@
             this.classList.add( "active" );
           });
         }
-
+        this.$emit('productListChange',this.products);
       }
     }
   }
 </script>
 <style scoped>
-
 	.delete-btn{
 		position: absolute;
 		margin-left: -40px;
@@ -185,35 +181,53 @@
 		position: absolute;
 		margin-left: -48px;
 	}
-	.tab-image .v-tab{     display: block;
+	.tab-image .v-tab{
+		display: block;
 		-webkit-box-flex: 0;
 		flex: none;     min-width: 31px;
 		max-width: 35px;
 		outline: none;
-		padding: 0 4px; }
-	.tab-dot {border-radius: 100px!important;}
-	.v-tab p{ margin: 3px; border-radius: 100px!important; border: 1px solid #b3b0b0;}
-	.v-tab--active .tab-dot {border: 1px solid #000!important;}
-	.tab-image .v-tabs-slider-wrapper{display: none!important;}
-	.tab-image .v-slide-group__content{flex: none!important;}
+		padding: 0 4px;
+	}
+	.tab-dot {
+		border-radius: 100px!important;
+	}
+	.v-tab p{
+		margin: 3px;
+		border-radius: 100px!important;
+		border: 1px solid #b3b0b0;
+	}
+	.v-tab--active .tab-dot {
+		border: 1px solid #000!important;
+	}
+	.tab-image .v-tabs-slider-wrapper{
+		display: none!important;
+	}
+	.tab-image .v-slide-group__content{
+		flex: none!important;
+	}
 	.tab-image .shoppingCart-btn {
 		top: 12px !important;
 		right: 12px !important;
 	}
-	.custome_radio .v-input--selection-controls__input{ width: 24px !important; height: 24px !important; }
-	.custome_radio  .v-icon.v-icon{ font-size: 23px !important; }
-
-	.custome_product_list{justify-content: center;}
+	.custome_radio .v-input--selection-controls__input{
+		width: 24px !important;
+		height: 24px !important;
+	}
+	.custome_radio  .v-icon.v-icon{
+		font-size: 23px !important;
+	}
+	.custome_product_list{
+		justify-content: center;
+	}
 	.custome_product_list li p {
 		width: 100%;
 		height: 100%;
 		border-radius: 100px;
-
 		display: block;
 		cursor: pointer;
 		box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	}
-
 	.custome_product_list li + li {
 		margin-left: 12px;
 	}
