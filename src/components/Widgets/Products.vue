@@ -10,7 +10,7 @@
 						<v-layout row wrap contact-item-info>
 							<v-flex xs12 lg12 md12 sm-12 text-center>
 								<div class="tab-image">
-									<img :src="details.image" :key="details.image" style="width: 100%;"/>
+									<img :src="details.thumbnail" :key="details.thumbnail" style="width: 100%;"/>
 									<div>
 										<ul class="custome_product_list d-flex align-items-center pl-0">
 											<li  v-for="(item,i) in details.skus" @click="selectProductBySku(details,item.sku_id)" :class="details.selectedColor == item.color_value ? 'active' : ''"
@@ -146,7 +146,7 @@
           if(item.product_id==selectedProduct.product_id){
             item.skus.forEach(function(skuItem, skuIndex){
               if(skuItem.sku_id==skuId){
-                vm.products[index].image=skuItem.image;
+                vm.products[index].thumbnail=skuItem.thumbnail;
               }
             });
           }
