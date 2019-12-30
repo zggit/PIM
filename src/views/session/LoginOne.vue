@@ -48,11 +48,13 @@
 									<i class="ti-facebook"></i>
 								</span>
 							</li>
+							<!--
 							<li @click="signInWithGoogle">
 								<span class="google-bg session-icon">
 									<i class="ti-google"></i>
 								</span>
 							</li>
+							-->
 							<li @click="signInWithTwitter">
 								<span class="twitter-bg session-icon">
 									<i class="ti-twitter-alt"></i>
@@ -64,12 +66,14 @@
 								</span>
 							</li>
 						</ul>
+						<!--
 						<v-btn 
 							color="error" 
 							@click="signinWithAuth0"
 						>
 							Signin With Auth0
 						</v-btn>
+						-->
 					</div>
 				</div>
 			</div>
