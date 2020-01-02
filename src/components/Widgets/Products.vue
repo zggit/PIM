@@ -1,14 +1,14 @@
 <template>
 	<div>
-		<v-layout row wrap >
-			<draggable v-model="products" class="dragArea w-100" group="product" @end="onEnd">
+		<v-layout row wrap class="draggable-layout">
+			<draggable v-model="products" class="draggable-layout layout row wrap" group="product" @end="onEnd">
 				<template v-for="(details,index) in products">
 					<app-card
 							:id="index"
-							colClasses="xl3 lg3 md6 sm6 xs12 float-left"
+							colClasses="xl3 lg3 md4 sm4 xs12"
 					>
 						<v-layout row wrap contact-item-info>
-							<v-flex xs12 lg12 md12 sm-12 text-center>
+							<v-flex lg12 md12 sm-12 xs-12 text-center>
 								<div class="tab-image">
 									<img :src="details.thumbnail" :key="details.thumbnail" style="width: 100%;"/>
 									<div>
@@ -166,6 +166,9 @@
   }
 </script>
 <style scoped>
+    .draggable-layout{
+        width: 100%;
+    }
 	.delete-btn{
 		position: absolute;
 		margin-left: -40px;

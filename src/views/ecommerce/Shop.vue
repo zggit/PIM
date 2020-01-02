@@ -43,10 +43,31 @@
 			</div>
             <div class="d-md-inline-flex mb-4 save-btn">
                 <v-btn color="primary" class="my-0 ml-0 mr-2" @click="saveProductList" medium>Save List</v-btn>
+                <v-btn color="success" class="my-0 ml-0 mr-2" @click.stop="dialog2 = true" medium>Preview Product List</v-btn>
             </div>
          <!-- grid view			 -->
           <div v-show="selectedView == 'grid'">
-               <products  :productsData="productsData"  @productListChange="productListChange" ></products>
+              <products  :productsData="productsData"  @productListChange="productListChange" ></products>
+              <v-dialog  v-bind:content-class="dialogBoxClass"  v-model="dialog2" >
+                  <v-card>
+                      <v-card-title>
+                         <div class="dialog-box-title">
+                            Product Preview List
+                         </div>
+                         <div class="dialog-box-select">
+                          <v-select :items="selectScreenViewOption" v-model="selectedClass" label="Select Screen" class="select-box-dialogbox"></v-select>
+                         </div>
+                      </v-card-title>
+                      <v-card-text>
+                          <v-container fluid pt-0 grid-list-xl>
+                          <products  :productsData="productsData"  @productListChange="productListChange" ></products>
+                          </v-container>
+                      </v-card-text>
+                      <v-card-actions>
+                          <v-btn color="error" @click.stop="dialog2=false">Close</v-btn>
+                      </v-card-actions>
+                  </v-card>
+              </v-dialog>
 			</div> 
 		</v-container>
 	</div>
@@ -66,6 +87,10 @@
 	  data() {
 	    return {
          productsData:[],
+         dialog2: false,
+         dialogBoxClass:'desktop-screen-preview',
+         selectedClass:'Desktop' ,
+         selectScreenViewOption : ['Desktop', 'iPad', 'Mobile'],
          type: ['Men', 'Women', 'Gadgets', 'Accessories'],
          recent:['This Week', 'This Month', 'Past Month'],
          noOfItems: ['10', '20', '30'],
@@ -74,6 +99,21 @@
          isActive: 'grid'
 	    };
 	  },
+      watch: {
+        selectedClass: function (val) {
+          if(val=='Desktop'){
+            this.dialogBoxClass='desktop-screen-preview';
+          }
+          if(val=='iPad'){
+            this.dialogBoxClass='ipad-screen-preview';
+          }
+          if(val=='Mobile'){
+            this.dialogBoxClass='mobile-screen-preview';
+          }
+        },
+
+      },
+
       mounted() {
 	    this.getProductList();
 	  },
@@ -136,6 +176,25 @@
      }
 	}
 </script>
-<style scoped>
+<style>
 .save-btn{text-align: right;float: right;}
+.v-dialog.desktop-screen-preview.v-dialog--active{ min-width:1025px !important;max-width: 1900px!important;}
+.v-dialog.ipad-screen-preview.v-dialog--active{ min-width:768px !important;max-width: 1024px!important;}
+.v-dialog.ipad-screen-preview.v-dialog--active .flex.xl3 {
+    flex-basis: 33.33% !important;
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    max-width: 33.33% !important;
+}
+.v-dialog.mobile-screen-preview.v-dialog--active{ min-width:240px !important;max-width: 414px!important;}
+.v-dialog.mobile-screen-preview.v-dialog--active .flex.xl3 {
+    flex-basis: 100% !important;
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    max-width: 100% !important;
+}
+.v-dialog .v-card__title{display: inline-block; width: 100%}
+.dialog-box-title{float: left !important;}
+.dialog-box-select{float: right !important;}
+.select-box-dialogbox{ max-width: 130px !important;}
 </style>
