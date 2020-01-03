@@ -1,8 +1,7 @@
 <template>
 	<div>
 		<v-layout row wrap class="draggable-layout">
-			<draggable v-model="products" class="draggable-layout layout row wrap" group="product" @end="onEnd">
-				<template v-for="(details,index) in products">
+			<template v-for="(details,index) in products">
 					<app-card
 							:id="index"
 							colClasses="xl4 lg4 md4 sm4 xs12"
@@ -18,22 +17,6 @@
 												<p :style="{background:item.color_value}"></p>
 											</li>
 										</ul>
-										<v-menu bottom offset-y>
-											<template v-slot:activator="{ on }">
-												<v-btn class="mr-4" outlined fab color="teal" small v-on="on">
-													<v-icon>edit</v-icon>
-												</v-btn>
-											</template>
-											<v-list>
-												<draggable v-model="details.skus"  class="dragArea w-100" group="color" @end="onColorOrderChange()" >
-													<v-list-item v-for="(item) in details.skus">
-														<v-list-item-title>
-															<v-chip class="ma-2" text-color="green" :color="item.color_value">{{item.color_value}}</v-chip>
-														</v-list-item-title>
-													</v-list-item>
-												</draggable>
-											</v-list>
-										</v-menu>
 									</div>
 									<template v-if="currentPage == 'shop'">
 										<v-btn fab dark small color="primary" class="shoppingCart-btn mt-2">
@@ -61,7 +44,6 @@
 						</v-layout>
 					</app-card>
 				</template>
-			</draggable>
 		</v-layout>
 		<delete-confirmation-dialog
 				ref="deleteConfirmationDialog"
@@ -105,14 +87,7 @@
       this.currentPage = splitRoute[3];
     },
     methods:{
-      onEnd(){
-        // Main product sequence change
-        this.products.forEach(function(item, index){
-          item.tag_position = index + 1;
-        });
 
-        this.$emit('productListChange',this.products);
-      },
       onColorOrderChange(){
         // Color order sequence change update full product list.
         this.products.forEach(function(item, index){
@@ -125,11 +100,6 @@
       deleteDialog(item){
         this.$refs.deleteConfirmationDialog.openDialog();
         this.selectItemToDelete = item;
-      },
-      DeleteProduct(){
-        this.$refs.deleteConfirmationDialog.close();
-        var index = this.products.indexOf(this.selectItemToDelete)
-        this.products.splice(index,1)
       },
       openDialog(){
         this.open = true;
@@ -160,7 +130,6 @@
             this.classList.add( "active" );
           });
         }
-        this.$emit('productListChange',this.products);
       }
     }
   }

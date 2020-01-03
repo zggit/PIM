@@ -60,7 +60,7 @@
                       </v-card-title>
                       <v-card-text>
                           <v-container fluid pt-0 grid-list-xl>
-                          <products  :productsData="productsData"  @productListChange="productListChange" ></products>
+                          <ProductsDialogList  :productsData="productsData"  @productListChange="productListChange" ></ProductsDialogList>
                           </v-container>
                       </v-card-text>
                       <v-card-actions>
@@ -75,6 +75,7 @@
 <script>
     import Vue from 'vue'
 	import Products from 'Components/Widgets/Products'
+    import ProductsDialogList from 'Components/Widgets/ProductsDialogList'
     import Productslist from 'Components/Widgets/ProductsList'
     //	import { productsData } from 'Views/ecommerce/data.js'
     import axios from 'axios';
@@ -82,6 +83,7 @@
 	export default {
 		components: {
      	  Products,
+          ProductsDialogList,
           Productslist  
 	   },
 	  data() {
@@ -180,14 +182,14 @@
 .save-btn{text-align: right;float: right;}
 .v-dialog.desktop-screen-preview.v-dialog--active{ min-width:1025px !important;max-width: 1900px!important;}
 .v-dialog.ipad-screen-preview.v-dialog--active{ min-width:768px !important;max-width: 1024px!important;}
-.v-dialog.ipad-screen-preview.v-dialog--active .flex.xl3 {
+.v-dialog.ipad-screen-preview.v-dialog--active .flex.xl4 {
     flex-basis: 33.33% !important;
     -webkit-box-flex: 0;
     flex-grow: 0;
     max-width: 33.33% !important;
 }
 .v-dialog.mobile-screen-preview.v-dialog--active{ min-width:240px !important;max-width: 414px!important;}
-.v-dialog.mobile-screen-preview.v-dialog--active .flex.xl3 {
+.v-dialog.mobile-screen-preview.v-dialog--active .flex.xl4 {
     flex-basis: 100% !important;
     -webkit-box-flex: 0;
     flex-grow: 0;
