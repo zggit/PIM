@@ -122,7 +122,7 @@
       methods:{
         getProductList() {
             const vm = this;
-            axios.post( 'https://beta3.payneglasses.com:450/webyiiapi/tag/list-tag-product.html',
+            axios.post('/webyiiapi/tag/list-tag-product.html',
             {
                 "token": "1234",
                 "page": "0",
@@ -144,7 +144,7 @@
         },
         saveProductList() {
           const vm = this;
-          axios.post( 'https://beta3.payneglasses.com:450/webyiiapi/tag/post-tag-list.html',
+          axios.post('/webyiiapi/tag/post-tag-list.html',
             {
               "token": "1234",
               "products":vm.productsData

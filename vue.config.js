@@ -6,7 +6,16 @@ module.exports = {
     css: {
         sourceMap: true
     },
-    productionSourceMap: false,
+  devServer: {
+    proxy: {
+      '^/webyiiapi': {
+        target: 'https://cors-anywhere.herokuapp.com/https://beta3.payneglasses.com:450/',
+        secure: true,
+        ws: true,
+        changeOrigin: true
+      },
+    },
+  },
     transpileDependencies: [
         /\/node_modules\/vuetify\//,
 		/\/node_modules\/vue-echarts\//,
